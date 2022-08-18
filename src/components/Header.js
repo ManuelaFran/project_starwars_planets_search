@@ -1,13 +1,20 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import StarWarsPlanetsContext from '../context/StarWarsPlanetsContext';
 
 function Header() {
-  const { filterByName, setFilterByName } = useContext(StarWarsPlanetsContext);
+  const [name, setName] = useState('');
+  const { data, setPlanetsInformation } = useContext(StarWarsPlanetsContext);
 
-  function handleChange({ target }) {
+  const handleChange = ({ target }) => {
     const { value } = target;
-    setFilterByName({ name: value });
-  }
+    setName(value);
+  };
+
+  useEffect(() => {
+    setPlanetsInformation(data
+      .filter((planet) => planet.name.includes(name)));
+  }, [name]);
+
   return (
     <div>
       <label htmlFor="nameFilter">
@@ -15,7 +22,7 @@ function Header() {
           id="nameFilter"
           data-testid="name-filter"
           type="text"
-          value={ filterByName.name }
+          value={ name }
           name="text"
           onChange={ handleChange }
         />

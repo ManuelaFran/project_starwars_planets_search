@@ -1,18 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import StarWarsPlanetsContext from '../context/StarWarsPlanetsContext';
 
 function Table() {
   const {
     planetsInformation,
-    setPlanetsInformation,
-    filterByName,
-    data,
   } = useContext(StarWarsPlanetsContext);
-
-  useEffect(() => {
-    setPlanetsInformation(data
-      .filter((planet) => planet.name.includes(filterByName.name)));
-  }, [data, filterByName, setPlanetsInformation]);
 
   return (
     <section>
