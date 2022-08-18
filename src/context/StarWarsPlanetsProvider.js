@@ -1,25 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import getStarWarsPlanets from '../services/StarWarsPlanetsAPI';
 import StarWarsPlanetsContext from './StarWarsPlanetsContext';
 
 function StarWarsPlanetsProvider({ children }) {
-  const [planets, setPlanets] = useState([]);
-  const [planetsInformation, setPlanetsInformation] = useState([]);
+  const [data, setData] = useState([]);
+  const [planetsInformation, setPlanetsInformation] = useState(data);
+  const [filterByName, setFilterByName] = useState({ name: '' });
 
   useEffect(() => {
-    getStarWarsPlanets('https://swapi-trybe.herokuapp.com/api/planets/')
-      .then((data) => {
-        setPlanets(data.results);
-        setPlanetsInformation(data.results);
-      });
+    async function getStarWarsPlanets() {
+      await fetch('https://swapi-trybe.herokuapp.com/api/planets/')
+        .then((response) => response.json())
+        .then((response) => {
+          setPlanetsInformation(response.results);
+          setData(response.results);
+        });
+    }
+    getStarWarsPlanets();
   }, []);
 
   const states = {
-    data: planets,
-    setPlanets,
     planetsInformation,
     setPlanetsInformation,
+    filterByName,
+    setFilterByName,
+    data,
   };
 
   return (
@@ -30,11 +35,7 @@ function StarWarsPlanetsProvider({ children }) {
 }
 
 StarWarsPlanetsProvider.propTypes = {
-  children: PropTypes.element,
-};
-
-StarWarsPlanetsProvider.defaultProps = {
-  children: <>default</>,
+  children: PropTypes.node.isRequired,
 };
 
 export default StarWarsPlanetsProvider;
