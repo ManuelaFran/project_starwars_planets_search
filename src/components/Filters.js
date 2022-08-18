@@ -5,12 +5,23 @@ function Filters() {
   const [columnFilter, setColumnFilter] = useState('population');
   const [comparisonFilter, setComparisonFilter] = useState('maior que');
   const [valueFilter, setValueFilter] = useState(0);
-  const { data, setPlanetsInformation } = useContext(StarWarsPlanetsContext);
+
+  const { planetsInformation, setPlanetsInformation,
+  } = useContext(StarWarsPlanetsContext);
+
   const [filterCombination, setFilterCombination] = useState({
     column: columnFilter,
     comparison: comparisonFilter,
     value: valueFilter,
   });
+
+  const [multipleFilters, setMultipleFilters] = useState([
+    'population',
+    'orbital_period',
+    'diameter',
+    'rotation_period',
+    'surface_water',
+  ]);
 
   const columnFilterChange = ({ target }) => {
     const { value } = target;
@@ -38,12 +49,16 @@ function Filters() {
   const filterByComparison = () => {
     const { column, comparison, value } = filterCombination;
     if (comparison === 'maior que') {
-      setPlanetsInformation(data.filter((planet) => (planet[column] > +value)));
+      setPlanetsInformation(planetsInformation
+        .filter((planet) => planet[column] > +value));
     } else if (comparison === 'menor que') {
-      setPlanetsInformation(data.filter((planet) => (planet[column] < +value)));
+      setPlanetsInformation(planetsInformation
+        .filter((planet) => planet[column] < +value));
     } else {
-      setPlanetsInformation(data.filter((planet) => (planet[column] === value)));
+      setPlanetsInformation(planetsInformation
+        .filter((planet) => planet[column] === value));
     }
+    setMultipleFilters(multipleFilters.filter((option) => option !== column));
   };
 
   return (
@@ -56,11 +71,11 @@ function Filters() {
           data-testid="column-filter"
           onChange={ columnFilterChange }
         >
-          <option value="population">population</option>
-          <option value="orbital_period">orbital_period</option>
-          <option value="diameter">diameter</option>
-          <option value="rotation_period">rotation_period</option>
-          <option value="surface_water">surface_water</option>
+          {
+            multipleFilters.map((option, index) => (
+              <option key={ index } value={ option }>{ option }</option>
+            ))
+          }
         </select>
       </label>
 
