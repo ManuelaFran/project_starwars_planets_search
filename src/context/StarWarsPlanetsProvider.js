@@ -18,14 +18,14 @@ function StarWarsPlanetsProvider({ children }) {
     getStarWarsPlanets();
   }, []);
 
-  const states = {
+  const contextValue = {
     planetsInformation,
     setPlanetsInformation,
     data,
   };
 
   return (
-    <StarWarsPlanetsContext.Provider value={ states }>
+    <StarWarsPlanetsContext.Provider value={ contextValue }>
       { children }
     </StarWarsPlanetsContext.Provider>
   );
